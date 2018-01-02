@@ -4,17 +4,26 @@
 
 A simple script that will document a PowerShell module and turn each function into a Markdown file that can then be uploaded to a Jekyll website. 
 
-This script is purpose built to generate Markdown files compatible with Jekyll only. If you require a more flexible script try [psdoc](https://github.com/ChaseFlorell/psDoc/) instead
+This script is purpose built to generate Markdown files compatible with Jekyll websites only. If you require a more flexible script try [psdoc](https://github.com/ChaseFlorell/psDoc/) by Chase Florell instead.
 
-For an example of the output of this script in Jekyll visit [worddoc docs](https://shanehoey.github.io/worddoc/docs/)
+For an example of the output of this script on a Jekyll website visit [worddoc docs](https://shanehoey.github.io/worddoc/docs)
 
 ## Examples
 
 ### ------------------------------Example------------------------------
 
+Manually specify the .psd1 file to load and the output path.
+
 ``` 
-import-module WordDoc 
-.\ps2jekyll\ps2Jekyll.ps1 -Module WordDoc -ModulePath .\worddoc\WordDoc\WordDoc.psm1 -outputpath .\worddoc\docs\_docs\
+.\ps2jekyll\ps2Jekyll.ps1 -Module WordDoc -ModulePath .\worddoc\WordDoc\WordDoc.psd1 -outputpath .\worddoc\docs\_docs\
+```
+
+### ------------------------------Example------------------------------
+
+Specify the module name and the output path.
+
+``` 
+.\ps2jekyll\ps2Jekyll.ps1 -Module WordDoc -outputpath .\worddoc\docs\_docs\
 ```
 
 ## Credits

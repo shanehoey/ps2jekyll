@@ -1,7 +1,17 @@
-param($Module,$ModulePath,$Script,$outputpath) 
+param(
+    [Parameter(Mandatory=$True,ParameterSetName="Module")]
+    $Module,
+    [Parameter(Mandatory=$False,ParameterSetName="Module")]
+    $ModulePath,
+    [Parameter(Mandatory=$True,ParameterSetName="Script")]
+    $Script,
+    [Parameter(Mandatory=$True,ParameterSetName="Module")]
+    [Parameter(Mandatory=$True,ParameterSetName="Script")]
+    $outputpath
+    ) 
 
 #Example 
-#.\ps2jekyll\ps2Jekyll.ps1 -Module WordDoc -ModulePath .\worddoc\WordDoc\WordDoc.psm1 -outputpath .\worddoc\docs\_docs\
+#.\ps2jekyll\ps2Jekyll.ps1 -Module WordDoc -ModulePath .\worddoc\WordDoc -outputpath .\worddoc\docs\_docs\
 
 if($PSBoundParameters.ContainsKey("Module")) { 
     if($PSBoundParameters.ContainsKey("ModulePath")) { 
@@ -24,8 +34,8 @@ foreach ($item in $items) {
     $md += "category: ""help"""
     $md += "---"
     $md += ""
-    $md += "# {{ page.title }}"
-    $md += "**Module** $item.ModuleName"
+    $md += "# $($item.name)"
+    $md += "**Module** $($item.ModuleName)"
     $md += ""
     $md += "## SYNOPSIS"
     $md += "$($item.Synopsis)"
@@ -35,9 +45,10 @@ foreach ($item in $items) {
     $md += ""
     $md += "## SYNTAX"
     foreach($i in $item.SYNTAX ) {
+        $i
         $md += ""
         $md += '```'
-        $md += (($I.syntax) | out-string).Trim()
+        $md += (($i) | out-string).Trim()
         $md += '```'
         $md += ""
     }
@@ -45,12 +56,12 @@ foreach ($item in $items) {
     $md += "## EXAMPLES"
     foreach($i in $item.examples.example ) {
         $md += "### $($i.title)"
-        $md +=  "$help.examples.example.remarks.text"
+        $md +=  $i.examples.example.remarks.text | Out-String
         $md += '```'
-        $md += "$($i.code)"
+        $md += $($i.code) | Out-String
         $md += '```'
-        $md += "$($i.introduction.text)"
-        $md += "$($i.remarks)"
+        $md += $($i.introduction.text) | Out-String
+        $md += $($i.remarks) | Out-String
     }
     $md += "## PARAMETERS"
     foreach($i in $item.parameters.parameter ) {

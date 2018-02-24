@@ -12,6 +12,7 @@ param(
 
 #Example 
 #.\ps2jekyll\ps2Jekyll.ps1 -Module WordDoc -ModulePath .\worddoc\WordDoc -outputpath .\worddoc\docs\_docs\
+#.\ps2jekyll\ps2Jekyll.ps1 -Module mediant -ModulePath .\mediant\mediant -outputpath .\mediant\docs\_docs
 
 if($PSBoundParameters.ContainsKey("Module")) { 
     if($PSBoundParameters.ContainsKey("ModulePath")) { 
@@ -29,7 +30,7 @@ foreach ($item in $items) {
     Write-Verbose "Converting Items $($Item.name)" -verbose
     $md = @()
     $md += "---"
-    $md += "title: ""$($item.name)"""
+    $md += "title: ""$($($item.name).tolower())"""
     $md += "excerpt: ""$($item.synopsis)"""
     $md += "category: ""help"""
     $md += "---"
@@ -45,7 +46,6 @@ foreach ($item in $items) {
     $md += ""
     $md += "## SYNTAX"
     foreach($i in $item.SYNTAX ) {
-        $i
         $md += ""
         $md += '```'
         $md += (($i) | out-string).Trim()
@@ -54,42 +54,55 @@ foreach ($item in $items) {
     }
     $md += ""
     $md += "## EXAMPLES"
+    $md += ""
     foreach($i in $item.examples.example ) {
         $md += "### $($i.title)"
-        $md +=  $i.examples.example.remarks.text | Out-String
+        $md += ""
+        $md += ($i.examples.example.remarks.text | Out-String).trim()
         $md += '```'
-        $md += $($i.code) | Out-String
+        $md += ($($i.introduction.text) | Out-String).trim() + ($($i.code) | Out-String).trim()
         $md += '```'
-        $md += $($i.introduction.text) | Out-String
-        $md += $($i.remarks) | Out-String
+        $md +=  ""
+        $md += ($($i.remarks.text) | Out-String).trim()
+        $md +=  ""
     }
+    $md += ""
     $md += "## PARAMETERS"
-    foreach($i in $item.parameters.parameter ) {
-        $md += "### -$($i.name)"
-        $md += "$($i.description)"
+    $md += ""
+    foreach($i in $item.parameters.parameter ) { 
+        $md += "### $($i.name)"
+        $md += ""
+        $md += ($i.description | out-string).trim()
         $md += ""
         $md += '```'
-        $md += "Type $($i.type)"
+        $md += "Type $($i.type.name)"
         $md += "Parameter Sets: "
         $md += "Aliases: "
         $md += "Required: $($i.required)"
         $md += "Position: $($i.position)"
         $md += "Default Value:$($i.defaultvalue)"
         $md += "Accept pipeline input: $($i.pipelineinput)"
-        $md += "Accept wildcard characters"
+        #$md += "Accept wildcard characters"
         #$i.globbing 
         #$i.name
         #$i.parametervalue
         $md += '```'
     }
     $md += "### CommonParameters"
+    $md += ""
     $md += "This function only supports -verbose"
-    $md += "## INPUTS"
-    $md += "## OUTPUTS"
-    $md += "## NOTES"
+    $md += ""
+    #todo
+    #$md += "## INPUTS"
+    #$md += ""
+    #$md += "## OUTPUTS"
+    #$md += ""
+    #$md += "## NOTES"
+    #$md += ""
     $md += "## RELATED LINKS"
-    $md += "# $($item.name)"
-    $filepath = join-path -path $outputpath -child "$($item.name).md"
-    $md | Out-File -FilePath $filepath 
+    $md += ""
+    $md += "$($item.relatedLinks.navigationLink.linkText)"
+    $md += "$($item.relatedLinks.navigationLink.uri)"
+    $filepath = join-path -path $outputpath -child "$($($item.name).tolower()).md"
+    $md | Out-File -FilePath $filepath -Encoding ascii 
 }
-

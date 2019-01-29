@@ -1,4 +1,6 @@
-# ps2jekyll
+# PowerShell to Jekyll Markdown (ps2jekyll)
+
+This script will document a PowerShell Module into MarkDown text ready to use on a Jekyll or a Git Pages Website.
 
 ## About
 
